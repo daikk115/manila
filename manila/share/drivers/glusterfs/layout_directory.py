@@ -206,7 +206,39 @@ class GlusterfsDirectoryMappedLayout(layout.GlusterfsShareLayoutBase):
         raise NotImplementedError
 
     def extend_share(self, share, new_size, share_server=None):
-        raise NotImplementedError
+        sizestr = six.text_type(new_size) + 'GB'
+        share_dir = '/' + share['name']
+        # change limit quota on the sub-directory/share
+        args = ('volume', 'quota', self.gluster_manager.volume,
+                'limit-usage', share_dir, sizestr)
+        try:
+            self.gluster_manager.gluster_call(*args)
+        except Exception as exc:
+            raise exc
+
+        comp_share = self.gluster_manager.components.copy()
+        comp_share['path'] = '/' + share['name']
+        export_location = self.driver._setup_via_manager(
+            {'share': share,
+             'manager': self._glustermanager(comp_share)})
+
+        return export_location
 
     def shrink_share(self, share, new_size, share_server=None):
-        raise NotImplementedError
+        sizestr = six.text_type(new_size) + 'GB'
+        share_dir = '/' + share['name']
+        # change limit quota on the sub-directory/share
+        args = ('volume', 'quota', self.gluster_manager.volume,
+                'limit-usage', share_dir, sizestr)
+        try:
+            self.gluster_manager.gluster_call(*args)
+        except Exception as exc:
+            raise exc
+
+        comp_share = self.gluster_manager.components.copy()
+        comp_share['path'] = '/' + share['name']
+        export_location = self.driver._setup_via_manager(
+            {'share': share,
+             'manager': self._glustermanager(comp_share)})
+
+        return export_location
