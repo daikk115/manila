@@ -214,6 +214,7 @@ class GlusterfsDirectoryMappedLayout(layout.GlusterfsShareLayoutBase):
         try:
             self.gluster_manager.gluster_call(*args)
         except Exception as exc:
+            LOG.error(_LE('Unable to extend share %s'), share['name'])
             raise exc
 
         comp_share = self.gluster_manager.components.copy()
@@ -233,6 +234,7 @@ class GlusterfsDirectoryMappedLayout(layout.GlusterfsShareLayoutBase):
         try:
             self.gluster_manager.gluster_call(*args)
         except Exception as exc:
+            LOG.error(_LE('Unable to shrink share %s'), share['name'])
             raise exc
 
         comp_share = self.gluster_manager.components.copy()
